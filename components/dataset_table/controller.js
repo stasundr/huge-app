@@ -2,10 +2,9 @@ import {List, Map} from 'immutable';
 import _t from '../../store/action_types';
 import initialState from '../../store/initial_state';
 
-export function toggleGroupByPopulation(groupByPopulations) {
+export function toggleGroupByPopulation() {
     return {
-        type: _t.DATASET_TOGGLE_POPULATION_VIEW,
-        payload: groupByPopulations
+        type: _t.DATASET_TOGGLE_POPULATION_VIEW
     }
 }
 
@@ -22,6 +21,16 @@ export function selectSample(sampleId) {
     }
 }
 
+export function selectSamples(samples, checkboxState) {
+    return {
+        type: _t.DATASET_SELECT_SAMPLES,
+        payload: {
+            samples,
+            checkboxState
+        }
+    }
+}
+
 export function changeSearchString(string) {
     return {
         type: _t.DATASET_CHANGE_SEARCH_STRING,
@@ -32,10 +41,19 @@ export function changeSearchString(string) {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case _t.DATASET_TOGGLE_POPULATION_VIEW:
-            return state.set("isGroupedByPopulation", action.payload);
+            return state.update("isGroupedByPopulation", s => !s);
 
         case _t.DATASET_SELECT_SAMPLE:
             return state.updateIn(["samples", action.payload, "selected"], s => !s);
+
+        case _t.DATASET_SELECT_SAMPLES:
+            return action.payload.samples.reduce(
+                (newState, sample) => newState.setIn(
+                    ["samples", sample.get("id"), "selected"],
+                    action.payload.checkboxState
+                ),
+                state
+            );
 
         case _t.DATASET_SET_VIEW_MODE:
             return state.update("viewMode", viewMode => (viewMode + 1) % 3);

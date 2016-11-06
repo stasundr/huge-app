@@ -1,10 +1,37 @@
 import {connect} from 'react-redux';
+import {List, fromJS} from 'immutable';
 import component from './view';
-import {toggleGroupByPopulation, toggleViewMode, selectSample, changeSearchString} from './controller';
+import {
+    toggleGroupByPopulation,
+    toggleViewMode,
+    selectSample,
+    selectSamples,
+    changeSearchString
+} from './controller';
 
 function mapStateToProps(state) {
-    return {
-        samples: state.get("samples"),
+    const samples = List(state.get("samples"))
+        .map(sample => sample[1]) // sample[0] - id, sample[1] - sample data
+        .filter(sample => {
+            switch(state.get("viewMode")) {
+                case 0: return `${sample.get("id")} ${sample.get("population")}`.toLowerCase().match(state.get("searchString").toLowerCase());
+                case 1: return sample.get("selected") || `${sample.get("id")} ${sample.get("population")}`.toLowerCase().match(state.get("searchString").toLowerCase());
+                case 2: return sample.get("selected");
+            }
+        });
+
+    const populations = fromJS(samples.reduce((pops, sample) => {
+        if (!pops.some(p => p.population == sample.get("population")))
+            pops.push({
+                population: sample.get("population")
+            });
+
+        return pops;
+    }, []));
+
+    return {    
+        samples,
+        populations,
         isGroupedByPopulation: state.get("isGroupedByPopulation"),
         viewMode: state.get("viewMode"),
         searchString: state.get("searchString").toLowerCase(),
@@ -13,9 +40,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        toggleGroupByPopulation: (groupByPopulations) => dispatch(toggleGroupByPopulation(groupByPopulations)),
+        toggleGroupByPopulation: () => dispatch(toggleGroupByPopulation()),
         toggleViewMode: () => dispatch(toggleViewMode()),
         selectSample: (sampleId) => dispatch(selectSample(sampleId)),
+        selectSamples: (samples, checkboxState) => dispatch(selectSamples(samples, checkboxState)),
         changeSearchString: (string) => dispatch(changeSearchString(string))
     }
 }
