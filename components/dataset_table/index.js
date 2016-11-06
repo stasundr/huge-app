@@ -6,7 +6,8 @@ function mapStateToProps(state) {
     return {
         samples: state.get("samples"),
         isGroupedByPopulation: state.get("isGroupedByPopulation"),
-        viewMode: state.get("viewMode")
+        viewMode: state.get("viewMode"),
+        searchString: state.get("searchString").toLowerCase(),
     }
 }
 

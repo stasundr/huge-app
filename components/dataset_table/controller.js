@@ -1,4 +1,4 @@
-import {Map} from 'immutable';
+import {List, Map} from 'immutable';
 import _t from '../../store/action_types';
 import initialState from '../../store/initial_state';
 
@@ -48,10 +48,9 @@ const reducer = (state = initialState, action) => {
 
         case _t.DATASET_RECEIVED:
             const newSamples = action.payload.samples.reduce((pack, sample) => {
-                sample.selected = (Math.random() < 0.05);
-                pack[sample.id] = sample
-                return pack;
-            }, {});
+                sample = Map(sample);
+                return pack.set(sample.get("id"), sample.set("selected", false));
+            }, Map({}));
 
             return state
                 .update("samples", samples => samples.merge(newSamples))
