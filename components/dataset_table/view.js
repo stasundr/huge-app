@@ -29,8 +29,6 @@ export default class DatasetTable extends React.Component {
             changeSearchString
         } = this.props;
 
-        //const isAllSelected = sampleList.every(sample => sample.get("selected"));
-        //const selectDeselectAll = () => selectSamples(sampleList, !isAllSelected);
         const viewModeIcon = [<CheckboxOutlineIcon/>, <CheckboxIntermediateIcon/>, <CheckboxIcon/>][viewMode];
 
         return (
@@ -61,7 +59,11 @@ export default class DatasetTable extends React.Component {
                 {
                     (isGroupedByPopulation)
                         ? <PopulationTable populations={populations} />
-                        : <IndividualTable samples={samples} selectSample={selectSample}/>
+                        : <IndividualTable
+                            samples={samples}
+                            selectSample={selectSample}
+                            selectSamples={selectSamples}
+                        />
                 }
             </div>
         )

@@ -2,7 +2,6 @@ import _t from '../../store/action_types';
 import initialState from '../../store/initial_state';
 
 export function selectTab(tab) {
-    console.log(tab);
     return {
         type: _t.TAB_SELECT,
         payload: tab

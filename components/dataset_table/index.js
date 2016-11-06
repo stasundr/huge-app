@@ -10,16 +10,17 @@ import {
 } from './controller';
 
 function mapStateToProps(state) {
+    const searchString = state.get("searchString").toLowerCase();
+    const viewMode = state.get("viewMode");
     const samples = List(state.get("samples"))
         .map(sample => sample[1]) // sample[0] - id, sample[1] - sample data
         .filter(sample => {
-            switch(state.get("viewMode")) {
-                case 0: return `${sample.get("id")} ${sample.get("population")}`.toLowerCase().match(state.get("searchString").toLowerCase());
-                case 1: return sample.get("selected") || `${sample.get("id")} ${sample.get("population")}`.toLowerCase().match(state.get("searchString").toLowerCase());
+            switch(viewMode) {
+                case 0: return `${sample.get("id")} ${sample.get("population")}`.toLowerCase().match(searchString);
+                case 1: return sample.get("selected") || `${sample.get("id")} ${sample.get("population")}`.toLowerCase().match(searchString);
                 case 2: return sample.get("selected");
             }
         });
-
     const populations = fromJS(samples.reduce((pops, sample) => {
         if (!pops.some(p => p.population == sample.get("population")))
             pops.push({
@@ -29,12 +30,12 @@ function mapStateToProps(state) {
         return pops;
     }, []));
 
-    return {    
+    return {
         samples,
         populations,
         isGroupedByPopulation: state.get("isGroupedByPopulation"),
-        viewMode: state.get("viewMode"),
-        searchString: state.get("searchString").toLowerCase(),
+        viewMode,
+        searchString,
     }
 }
 

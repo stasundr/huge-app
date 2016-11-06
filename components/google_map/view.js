@@ -29,17 +29,17 @@ export default class AppGoogleMap extends React.Component {
         });
     }
 
-    componentDidUpdate(props, state)  {
-        const {
-            mapUpdateState,
-        } = props;
-
-        mapUpdateState(
-            state.mapCenterLat,
-            state.mapCenterLng,
-            state.mapZoom,
-        );
-    }
+    // componentDidUpdate(props, state)  {
+    //     const {
+    //         mapUpdateState,
+    //     } = props;
+    //
+    //     mapUpdateState(
+    //         state.mapCenterLat,
+    //         state.mapCenterLng,
+    //         state.mapZoom,
+    //     );
+    // }
 
     _onClick({x, y, lat, lng, event}) {
         this.setState({

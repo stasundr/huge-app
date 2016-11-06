@@ -25,6 +25,7 @@ export default class PopulationTable extends React.Component {
         const {
             samples,
             selectSample,
+            selectSamples,
         } = this.props;
 
         return (
@@ -36,7 +37,7 @@ export default class PopulationTable extends React.Component {
                 headerHeight={30}
             >
                 <Column
-                    header={<Cell><input type={"checkbox"} onChange={() => {}}/>Sample ID</Cell>}
+                    header={<Cell><input type={"checkbox"} onChange={e => {selectSamples(samples, e.target.checked)}/>Sample ID</Cell>}
                     cell={<CheckboxCell data={samples} col='id' onChange={selectSample}/>}
                     width={100}
                     fixed
